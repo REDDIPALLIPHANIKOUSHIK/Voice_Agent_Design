@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home Credit LAP AI Voice Agent | Conversational AI Platform</title>
+  <meta name="description" content="AI Voice Agent for Home Credit Loan Against Property (LAP) qualification, out-of-order fact extraction, and deterministic eligibility evaluation." />
+  
+  <!-- Modern Typography: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Top Navigation Header -->
+    <header class="top-nav">
+      <div class="brand">
+        <div class="brand-logo">
+          <span class="logo-icon">⚡</span>
+        </div>
+        <div class="brand-text">
+          <h1>Home Credit LAP <span class="badge-tag">Voice Agent</span></h1>
+          <p class="subtitle">AI-Powered Loan Against Property Qualification</p>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <div class="control-group">
+          <label for="languageSelect">Language</label>
+          <select id="languageSelect" class="styled-select">
+            <option value="English" selected>English</option>
+            <option value="Hindi">हिंदी (Hindi)</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="providerSelect">Voice Engine</label>
+          <select id="providerSelect" class="styled-select">
+            <option value="browser" selected>Browser Web Speech (Live Mic & TTS)</option>
+            <option value="retell">Retell AI (Telephony Adapter)</option>
+            <option value="bolna">Bolna AI (Webhook Adapter)</option>
+            <option value="local">Server gTTS (Audio Stream)</option>
+          </select>
+        </div>
+
+        <div class="status-pill" id="agentStatusBadge">
+          <span class="status-dot standby"></span>
+          <span id="agentStatusText">Ready / Standby</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Workspace Grid -->
+    <main class="dashboard-grid">
+      <!-- Left Column: Voice Call Console & Scenarios -->
+      <section class="panel console-panel">
+        <div class="panel-header">
+          <h2>Active Call Console</h2>
+          <span class="call-stage-badge" id="callStageBadge">STAGE: GREETING</span>
+        </div>
+
+        <!-- Voice Interaction Hub -->
+        <div class="voice-hub">
+          <div class="avatar-container">
+            <div class="pulse-ring ring-1"></div>
+            <div class="pulse-ring ring-2"></div>
+            <div class="pulse-ring ring-3"></div>
+            <div class="agent-avatar" id="agentAvatar">
+              <span class="avatar-emoji">🎙️</span>
+            </div>
+          </div>
+
+          <!-- Dynamic Audio Waveform -->
+          <div class="wave-visualizer" id="waveVisualizer">
+            <span class="wave-bar"></span>
+            <span class="wave-bar"></span>
+            <span class="wave-bar"></span>
+            <span class="wave-bar"></span>
+            <span class="wave-bar"></span>
+            <span class="wave-bar"></span>
+            <span class="wave-bar"></span>
+            <span class="wave-bar"></span>
+            <span class="wave-bar"></span>
+            <span class="wave-bar"></span>
+          </div>
+
+          <div class="speaker-label" id="speakerLabel">Agent Ananya (Female) · Home Credit</div>
+
+          <!-- Primary Call Controls -->
+          <div class="call-actions">
+            <button id="btnStartCall" class="btn btn-primary">
+              <span class="btn-icon">📞</span> Start Call
+            </button>
+            <button id="btnMic" class="btn btn-mic" disabled title="Click and speak">
+              <span class="btn-icon">🎤</span> <span id="micBtnText">Speak (Mic)</span>
+            </button>
+            <button id="btnEndCall" class="btn btn-danger" disabled>
+              <span class="btn-icon">⏹</span> End Call
+            </button>
+          </div>
+        </div>
+
+        <!-- Text / Manual Utterance Input -->
+        <div class="utterance-input-box">
+          <form id="utteranceForm">
+            <input
+              type="text"
+              id="customerInput"
+              class="styled-input"
+              placeholder="Type customer utterance or use microphone..."
+              disabled
+              autocomplete="off"
+            />
+            <button type="submit" id="btnSendUtterance" class="btn btn-secondary" disabled>
+              Send
+            </button>
+          </form>
+          <div class="quick-chips">
+            <span class="chip-label">Quick Phrases:</span>
+            <button class="chip" data-phrase="Yes, this is Rahul speaking.">"Yes, this is Rahul"</button>
+            <button class="chip" data-phrase="It's a residential house, jointly owned with my wife, and worth around 80 lakhs.">"Multi-fact utterance"</button>
+            <button class="chip" data-phrase="Wait, what documents do you need?">"Interruption"</button>
+            <button class="chip" data-phrase="What interest rate do you offer?">"Interest rate query"</button>
+          </div>
+        </div>
+
+        <!-- Preset Test Scenario Selector -->
+        <div class="scenario-runner-card">
+          <div class="card-header">
+            <h3>Automated Scenario Simulator</h3>
+            <span class="card-sub">Run verified test cases (T01–T12, A01–A07)</span>
+          </div>
+          <div class="scenario-controls">
+            <select id="scenarioSelector" class="styled-select scenario-select">
+              <option value="" disabled selected>Select an evaluation test case...</option>
+              <optgroup label="Core Business Test Cases (T01-T12)">
+                <option value="T01">T01 - Perfect Eligible Customer (Full Handoff)</option>
+                <option value="T02">T02 - Agricultural Property (Disqualification)</option>
+                <option value="T03">T03 - Cash Income (Disqualification)</option>
+                <option value="T04">T04 - Missing Originals / Photocopies (Disqualification)</option>
+                <option value="T05">T05 - Tenure 2 Years (Disqualification)</option>
+                <option value="T06">T06 - Tenure 20 Years (Disqualification)</option>
+                <option value="T07">T07 - Loan Amount > ₹75 Lakh Capping Offer</option>
+                <option value="T08">T08 - Joint Ownership (Fully Eligible)</option>
+                <option value="T09">T09 - Existing Property Loan (Specialist Transfer)</option>
+                <option value="T10">T10 - EMI Reduction Request (Specialist Transfer)</option>
+                <option value="T11">T11 - Out-of-Order Multi-Fact Response</option>
+                <option value="T12">T12 - Busy Customer Callback Scheduling</option>
+              </optgroup>
+              <optgroup label="Adversarial & Edge Cases (A01-A07)">
+                <option value="A01">A01 - Contradiction Correction (Residential -> Agri)</option>
+                <option value="A02">A02 - Multi-fact Utterance Extraction</option>
+                <option value="A03">A03 - Interruption Handling</option>
+                <option value="A04">A04 - Interest Rate Diversion (Zero Hallucination)</option>
+                <option value="A05">A05 - Corrected Tenure (10 -> 15 Years)</option>
+                <option value="A06">A06 - Corrected Income Mode (Bank -> Cash)</option>
+                <option value="A07">A07 - All 7 Facts in a Single Utterance</option>
+              </optgroup>
+            </select>
+            <button id="btnRunScenario" class="btn btn-accent">Run Simulation</button>
+          </div>
+          <div id="scenarioDescription" class="scenario-desc-box">
+            Select a scenario to view its expected evaluation trace and execute it end-to-end.
+          </div>
+        </div>
+      </section>
+
+      <!-- Center Column: 7-Question Checklist & Decision Gate -->
+      <section class="panel checklist-panel">
+        <div class="panel-header">
+          <h2>7-Question Eligibility Checklist</h2>
+          <span class="progress-indicator" id="progressIndicator">0 / 7 Completed</span>
+        </div>
+
+        <div class="checklist-items">
+          <!-- 1. Property Type -->
+          <div class="check-item" id="item_property_type">
+            <div class="check-icon">1</div>
+            <div class="check-body">
+              <div class="check-title">Property Type</div>
+              <div class="check-rule">Allowed: Residential, Commercial, Industrial (Agri rejects)</div>
+              <div class="check-val" id="val_property_type">— Pending</div>
+            </div>
+            <div class="check-badge" id="badge_property_type">Pending</div>
+          </div>
+
+          <!-- 2. Ownership -->
+          <div class="check-item" id="item_ownership_status">
+            <div class="check-icon">2</div>
+            <div class="check-body">
+              <div class="check-title">Ownership Status</div>
+              <div class="check-rule">Allowed: Sole, Joint (Both eligible)</div>
+              <div class="check-val" id="val_ownership_status">— Pending</div>
+            </div>
+            <div class="check-badge" id="badge_ownership_status">Pending</div>
+          </div>
+
+          <!-- 3. Original Documents -->
+          <div class="check-item" id="item_documents_available">
+            <div class="check-icon">3</div>
+            <div class="check-body">
+              <div class="check-title">Original Documents</div>
+              <div class="check-rule">Mandatory: Original documents available for verification</div>
+              <div class="check-val" id="val_documents_available">— Pending</div>
+            </div>
+            <div class="check-badge" id="badge_documents_available">Pending</div>
+          </div>
+
+          <!-- 4. Loan Amount -->
+          <div class="check-item" id="item_loan_amount">
+            <div class="check-icon">4</div>
+            <div class="check-body">
+              <div class="check-title">Loan Amount Requested</div>
+              <div class="check-rule">Max: ₹75,00,000 (If >75L, prompt capping offer)</div>
+              <div class="check-val" id="val_loan_amount">— Pending</div>
+            </div>
+            <div class="check-badge" id="badge_loan_amount">Pending</div>
+          </div>
+
+          <!-- 5. Occupation & Income Mode -->
+          <div class="check-item" id="item_occupation_income_mode">
+            <div class="check-icon">5</div>
+            <div class="check-body">
+              <div class="check-title">Occupation & Income Mode</div>
+              <div class="check-rule">Salaried/Self-Employed with Bank receipt (Cash rejects)</div>
+              <div class="check-val" id="val_occupation_income_mode">— Pending</div>
+            </div>
+            <div class="check-badge" id="badge_occupation_income_mode">Pending</div>
+          </div>
+
+          <!-- 6. Market Value -->
+          <div class="check-item" id="item_market_value">
+            <div class="check-icon">6</div>
+            <div class="check-body">
+              <div class="check-title">Property Market Value</div>
+              <div class="check-rule">Estimated value captured (No minimum invented)</div>
+              <div class="check-val" id="val_market_value">— Pending</div>
+            </div>
+            <div class="check-badge" id="badge_market_value">Pending</div>
+          </div>
+
+          <!-- 7. Repayment Tenure -->
+          <div class="check-item" id="item_tenure_years">
+            <div class="check-icon">7</div>
+            <div class="check-body">
+              <div class="check-title">Repayment Tenure</div>
+              <div class="check-rule">Allowed: 3 to 15 years inclusive</div>
+              <div class="check-val" id="val_tenure_years">— Pending</div>
+            </div>
+            <div class="check-badge" id="badge_tenure_years">Pending</div>
+          </div>
+        </div>
+
+        <!-- Eligibility Decision Banner -->
+        <div class="decision-card" id="decisionCard">
+          <div class="decision-header">
+            <span class="decision-icon" id="decisionIcon">⚖️</span>
+            <div>
+              <div class="decision-title" id="decisionTitle">Evaluating Lead...</div>
+              <div class="decision-desc" id="decisionDesc">Awaiting eligibility responses.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: Live Transcript & State Inspector -->
+      <section class="panel transcript-panel">
+        <div class="panel-header">
+          <h2>Live Call Transcript</h2>
+          <button id="btnExportLog" class="btn btn-outline-sm" title="Export Call Log">
+            📥 Export Log
+          </button>
+        </div>
+
+        <!-- Transcript Messages Flow -->
+        <div class="transcript-stream" id="transcriptStream">
+          <div class="transcript-placeholder">
+            <p>Start a call or run a scenario to view the live conversation log.</p>
+          </div>
+        </div>
+
+        <!-- Collapsible State Inspector -->
+        <div class="state-inspector-card">
+          <div class="inspector-header">
+            <h3>Qualification State Model</h3>
+            <span class="state-indicator" id="stateIndicator">Strict Deterministic Mode</span>
+          </div>
+          <pre class="state-json-view" id="stateJsonView">{}</pre>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-left">
+        <span>Home Credit LAP AI Voice Agent</span> · Built for SalesAgents AI Assignment Submission
+      </div>
+      <div class="footer-right">
+        <span>Repository: <a href="https://github.com/REDDIPALLIPHANIKOUSHIK/Voice_Agent_Design" target="_blank">REDDIPALLIPHANIKOUSHIK/Voice_Agent_Design</a></span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

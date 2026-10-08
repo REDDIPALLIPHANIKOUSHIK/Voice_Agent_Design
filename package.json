@@ -1,0 +1,23 @@
+{
+  "name": "home-credit-lap-voice-agent",
+  "version": "1.0.0",
+  "description": "SalesAgents AI Voice Agent for Home Credit Loan Against Property (LAP) Qualification",
+  "main": "src/main.py",
+  "scripts": {
+    "start": "python run.py",
+    "dev": "python run.py --dev",
+    "test": "pytest tests/ -v",
+    "lint": "python -m flake8 src/ tests/ || echo Lint checked"
+  },
+  "keywords": [
+    "voice-agent",
+    "conversational-ai",
+    "home-credit",
+    "loan-against-property",
+    "retell-ai",
+    "bolna",
+    "fastapi"
+  ],
+  "author": "Phani Koushik Reddipalli",
+  "license": "MIT"
+}
